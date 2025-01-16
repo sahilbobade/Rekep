@@ -1,0 +1,6 @@
+def stage2_subgoal_constraint1(end_effector, keypoints):
+    """The red pen (keypoint 2) is horizontal (parallel to the table surface)."""
+    pen_vector = keypoints[2] - keypoints[0]  # Assuming keypoint 0 is a reference on the table
+    horizontal_vector = np.array([1, 0, 0])  # Parallel to the x-axis
+    return np.abs(np.dot(pen_vector, horizontal_vector) / np.linalg.norm(pen_vector))
+

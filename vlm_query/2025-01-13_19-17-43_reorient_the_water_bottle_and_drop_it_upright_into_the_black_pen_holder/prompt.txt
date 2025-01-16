@@ -105,5 +105,5 @@ release_keypoints = [?, ..., ?]
 ```
 
 ## Query
-Query Task: "{instruction}"
+Query Task: "reorient the water bottle and drop it upright into the black pen holder"
 Query Image:

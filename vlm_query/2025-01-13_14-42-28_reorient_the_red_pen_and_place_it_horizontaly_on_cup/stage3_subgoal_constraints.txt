@@ -1,0 +1,6 @@
+def stage3_subgoal_constraint1(end_effector, keypoints):
+    """The red pen (keypoint 2) is horizontally placed on the cup (keypoints 4, 5, 6)."""
+    cup_center = np.mean(keypoints[4:7], axis=0)
+    offsetted_point = cup_center + np.array([0, 0, 0.5])  # Slightly above the cup
+    return np.linalg.norm(keypoints[2] - offsetted_point)
+

@@ -1,0 +1,9 @@
+def stage3_subgoal_constraint1(end_effector, keypoints):
+    """The bottle (keypoint 5) needs to be tilted to pour water."""
+    # Assuming tilting involves a specific angle, we can use a vector approach
+    bottle_vector = keypoints[5] - keypoints[1]  # Example vector from base to top
+    desired_vector = np.array([0, 0, -1])  # Tilt downwards
+    angle = np.arccos(np.dot(bottle_vector, desired_vector) / 
+                      (np.linalg.norm(bottle_vector) * np.linalg.norm(desired_vector)))
+    return angle - np.pi / 4  # Example angle threshold
+

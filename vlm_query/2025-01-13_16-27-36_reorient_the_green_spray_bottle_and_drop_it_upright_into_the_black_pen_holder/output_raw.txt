@@ -1,0 +1,62 @@
+```python
+# The task involves reorienting the green spray bottle and dropping it upright into the black pen holder.
+# This task can be broken down into 3 stages:
+# 1. Grasp the green spray bottle.
+# 2. Reorient the green spray bottle to be upright.
+# 3. Drop the green spray bottle upright into the black pen holder.
+
+num_stages = 3
+
+### stage 1 sub-goal constraints
+def stage1_subgoal_constraint1(end_effector, keypoints):
+    """Align the end-effector with the green spray bottle (keypoint 0)."""
+    return np.linalg.norm(end_effector - keypoints[0])
+
+### stage 1 path constraints
+# No path constraints needed for grasping.
+
+### stage 2 sub-goal constraints
+def stage2_subgoal_constraint1(end_effector, keypoints):
+    """The green spray bottle is upright (parallel to the z-axis)."""
+    bottle_vector = keypoints[1] - keypoints[0]
+    z_axis = np.array([0, 0, 1])
+    return np.arccos(np.dot(bottle_vector, z_axis) / (np.linalg.norm(bottle_vector) * np.linalg.norm(z_axis)))
+
+### stage 2 path constraints
+def stage2_path_constraint1(end_effector, keypoints):
+    """The robot must still be grasping the green spray bottle (keypoint 0)."""
+    return get_grasping_cost_by_keypoint_idx(0)
+
+### stage 3 sub-goal constraints
+def stage3_subgoal_constraint1(end_effector, keypoints):
+    """The green spray bottle must still stay upright (parallel to the z-axis)."""
+    bottle_vector = keypoints[1] - keypoints[0]
+    z_axis = np.array([0, 0, 1])
+    return np.arccos(np.dot(bottle_vector, z_axis) / (np.linalg.norm(bottle_vector) * np.linalg.norm(z_axis)))
+
+def stage3_subgoal_constraint2(end_effector, keypoints):
+    """The green spray bottle is 20cm above the pen holder opening (keypoint 9)."""
+    offsetted_point = keypoints[9] + np.array([0, 0, 0.2])
+    return np.linalg.norm(keypoints[0] - offsetted_point)
+
+### stage 3 path constraints
+def stage3_path_constraint1(end_effector, keypoints):
+    """The robot must still be grasping the green spray bottle (keypoint 0)."""
+    return get_grasping_cost_by_keypoint_idx(0)
+
+"""
+Summarize keypoints to be grasped in all grasping stages.
+The length of the list should be equal to the number of stages.
+For grasping stage, write the keypoint index. For non-grasping stage, write -1.
+"""
+grasp_keypoints = [0, -1, -1]
+
+"""
+Summarize at **the end of which stage** the robot should release the keypoints.
+The keypoint indices must appear in an earlier stage as defined in `grasp_keypoints` (i.e., a keypoint can only be released only if it has been grasped previously).
+Only release object when it's necessary to complete the task, e.g., drop bouquet in the vase.
+The length of the list should be equal to the number of stages.
+If a keypoint is to be released at the end of a stage, write the keypoint index at the corresponding location. Otherwise, write -1.
+"""
+release_keypoints = [-1, -1, 0]
+```

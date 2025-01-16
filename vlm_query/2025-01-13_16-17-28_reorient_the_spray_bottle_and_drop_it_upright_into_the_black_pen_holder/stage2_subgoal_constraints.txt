@@ -1,0 +1,6 @@
+def stage2_subgoal_constraint1(end_effector, keypoints):
+    """The spray bottle (keypoint 5) is upright (parallel to the z-axis)."""
+    spray_vector = keypoints[5] - keypoints[2]
+    z_axis = np.array([0, 0, 1])
+    return np.arccos(np.dot(spray_vector, z_axis) / (np.linalg.norm(spray_vector) * np.linalg.norm(z_axis)))
+

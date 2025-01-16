@@ -1,0 +1,11 @@
+def stage3_subgoal_constraint1(end_effector, keypoints):
+    """The water bottle must still stay upright (parallel to the z-axis)."""
+    bottle_vector = keypoints[6] - keypoints[5]
+    z_axis = np.array([0, 0, 1])
+    return np.arccos(np.dot(bottle_vector, z_axis) / (np.linalg.norm(bottle_vector) * np.linalg.norm(z_axis)))
+
+def stage3_subgoal_constraint2(end_effector, keypoints):
+    """The water bottle is 20cm above the pen holder opening (keypoint 8)."""
+    offsetted_point = keypoints[8] + np.array([0, 0, 0.2])
+    return np.linalg.norm(keypoints[5] - offsetted_point)
+

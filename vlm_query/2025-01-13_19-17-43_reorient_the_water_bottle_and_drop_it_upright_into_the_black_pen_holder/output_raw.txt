@@ -1,0 +1,49 @@
+```python
+# The task involves reorienting a water bottle and dropping it upright into a pen holder.
+# There are 3 stages involved in this task:
+# 1. Grasp the water bottle.
+# 2. Reorient the water bottle to be upright.
+# 3. Drop the water bottle upright into the pen holder.
+
+num_stages = 3
+
+### stage 1 sub-goal constraints
+def stage1_subgoal_constraint1(end_effector, keypoints):
+    """Align the end-effector with the water bottle (keypoint 5)."""
+    return np.linalg.norm(end_effector - keypoints[5])
+
+### stage 1 path constraints
+# No path constraints needed for grasping.
+
+### stage 2 sub-goal constraints
+def stage2_subgoal_constraint1(end_effector, keypoints):
+    """The water bottle is upright (parallel to the z-axis)."""
+    bottle_vector = keypoints[6] - keypoints[5]
+    z_axis = np.array([0, 0, 1])
+    return np.arccos(np.dot(bottle_vector, z_axis) / (np.linalg.norm(bottle_vector) * np.linalg.norm(z_axis)))
+
+### stage 2 path constraints
+def stage2_path_constraint1(end_effector, keypoints):
+    """The robot must still be grasping the water bottle (keypoint 5)."""
+    return get_grasping_cost_by_keypoint_idx(5)
+
+### stage 3 sub-goal constraints
+def stage3_subgoal_constraint1(end_effector, keypoints):
+    """The water bottle must still stay upright (parallel to the z-axis)."""
+    bottle_vector = keypoints[6] - keypoints[5]
+    z_axis = np.array([0, 0, 1])
+    return np.arccos(np.dot(bottle_vector, z_axis) / (np.linalg.norm(bottle_vector) * np.linalg.norm(z_axis)))
+
+def stage3_subgoal_constraint2(end_effector, keypoints):
+    """The water bottle is 20cm above the pen holder opening (keypoint 8)."""
+    offsetted_point = keypoints[8] + np.array([0, 0, 0.2])
+    return np.linalg.norm(keypoints[5] - offsetted_point)
+
+### stage 3 path constraints
+def stage3_path_constraint1(end_effector, keypoints):
+    """The robot must still be grasping the water bottle (keypoint 5)."""
+    return get_grasping_cost_by_keypoint_idx(5)
+
+grasp_keypoints = [5, -1, -1]
+release_keypoints = [-1, -1, 5]
+```

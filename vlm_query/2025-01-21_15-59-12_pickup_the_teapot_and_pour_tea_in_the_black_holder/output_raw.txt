@@ -1,0 +1,62 @@
+```python
+# The task involves picking up the teapot and pouring tea into the black holder.
+# There are 3 stages involved in this task:
+# 1. Grasp the teapot.
+# 2. Align the teapot with the black holder.
+# 3. Pour tea into the black holder.
+
+num_stages = 3
+
+### stage 1 sub-goal constraints
+def stage1_subgoal_constraint1(end_effector, keypoints):
+    """Align the end-effector with the teapot handle (keypoint 1)."""
+    return np.linalg.norm(end_effector - keypoints[1])
+
+### stage 1 path constraints
+# No path constraints for grasping stage
+
+### stage 2 sub-goal constraints
+def stage2_subgoal_constraint1(end_effector, keypoints):
+    """The teapot spout (keypoint 4) needs to be 10cm above the black holder opening (keypoint 5)."""
+    offsetted_point = keypoints[5] + np.array([0, 0, 0.1])
+    return np.linalg.norm(keypoints[4] - offsetted_point)
+
+### stage 2 path constraints
+def stage2_path_constraint1(end_effector, keypoints):
+    """The robot must still be grasping the teapot handle (keypoint 1)."""
+    return get_grasping_cost_by_keypoint_idx(1)
+
+def stage2_path_constraint2(end_effector, keypoints):
+    """The teapot must stay upright to avoid spilling."""
+    teapot_vector = keypoints[4] - keypoints[1]
+    upright_vector = np.array([0, 0, 1])
+    angle = np.arccos(np.clip(np.dot(teapot_vector, upright_vector) / 
+                              (np.linalg.norm(teapot_vector) * np.linalg.norm(upright_vector)), -1.0, 1.0))
+    return angle - np.pi / 6  # Allow a small tilt
+
+### stage 3 sub-goal constraints
+def stage3_subgoal_constraint1(end_effector, keypoints):
+    """The teapot spout (keypoint 4) needs to be 5cm above the black holder opening (keypoint 5)."""
+    offsetted_point = keypoints[5] + np.array([0, 0, 0.05])
+    return np.linalg.norm(keypoints[4] - offsetted_point)
+
+def stage3_subgoal_constraint2(end_effector, keypoints):
+    """The teapot spout (keypoint 4) must be tilted to pour liquid."""
+    teapot_vector = keypoints[4] - keypoints[1]
+    pour_vector = np.array([0, 0, -1])
+    angle = np.arccos(np.clip(np.dot(teapot_vector, pour_vector) / 
+                              (np.linalg.norm(teapot_vector) * np.linalg.norm(pour_vector)), -1.0, 1.0))
+    return np.pi / 4 - angle  # Ensure a tilt for pouring
+
+### stage 3 path constraints
+def stage3_path_constraint1(end_effector, keypoints):
+    """The robot must still be grasping the teapot handle (keypoint 1)."""
+    return get_grasping_cost_by_keypoint_idx(1)
+
+def stage3_path_constraint2(end_effector, keypoints):
+    """The teapot spout (keypoint 4) is directly above the black holder opening (keypoint 5)."""
+    return np.linalg.norm(keypoints[4][:2] - keypoints[5][:2])
+
+grasp_keypoints = [1, -1, -1]
+release_keypoints = [-1, -1, 1]
+```

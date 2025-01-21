@@ -1,0 +1,5 @@
+def stage2_subgoal_constraint1(end_effector, keypoints):
+    """The teapot spout (keypoint 3) needs to be 10cm above the black holder (keypoint 6)."""
+    offsetted_point = keypoints[6] + np.array([0, 0, 0.1])
+    return np.linalg.norm(keypoints[3] - offsetted_point)
+

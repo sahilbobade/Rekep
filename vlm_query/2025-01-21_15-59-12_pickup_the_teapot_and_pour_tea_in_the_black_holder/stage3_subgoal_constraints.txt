@@ -1,0 +1,13 @@
+def stage3_subgoal_constraint1(end_effector, keypoints):
+    """The teapot spout (keypoint 4) needs to be 5cm above the black holder opening (keypoint 5)."""
+    offsetted_point = keypoints[5] + np.array([0, 0, 0.05])
+    return np.linalg.norm(keypoints[4] - offsetted_point)
+
+def stage3_subgoal_constraint2(end_effector, keypoints):
+    """The teapot spout (keypoint 4) must be tilted to pour liquid."""
+    teapot_vector = keypoints[4] - keypoints[1]
+    pour_vector = np.array([0, 0, -1])
+    angle = np.arccos(np.clip(np.dot(teapot_vector, pour_vector) / 
+                              (np.linalg.norm(teapot_vector) * np.linalg.norm(pour_vector)), -1.0, 1.0))
+    return np.pi / 4 - angle  # Ensure a tilt for pouring
+

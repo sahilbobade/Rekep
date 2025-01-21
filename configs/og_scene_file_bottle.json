@@ -489,51 +489,7 @@
                 "joints": {},
                 "non_kin": {}
             },
-            "pen_1": {
-                "root_link": {
-                    "pos": [
-                        0.1,
-                        -0.15,
-                        0.7163046002388
-                    ],
-                    "ori": [ -0.7071068, 0, 0, 0.7071068 ],
-                    "lin_vel": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "ang_vel": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ]
-                },
-                "joints": {},
-                "non_kin": {}
-            },
-            "pen_2": {
-                "root_link": {
-                    "pos": [
-                        -0.15,
-                        -0.15,
-                        0.7163046002388
-                    ],
-                    "ori": [ -0.7071068, 0, 0, 0.7071068 ],
-                    "lin_vel": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "ang_vel": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ]
-                },
-                "joints": {},
-                "non_kin": {}
-            },
-            "teapot": {
+            "bottle": {
                 "root_link": {
                     "pos": [
                         -0.1,
@@ -941,44 +897,15 @@
                     "scale": [2.0,2.0,2.0]
                 }
             },
-            "pen_1": {
-                "class_module": "omnigibson.objects.dataset_object",
-                "class_name": "DatasetObject",
-                "args": {
-                    "name": "pen_1",
-                    "prim_path": "/World/pen_1",
-                    "category": "pen",
-                    "model": "gqwdor",
-                    "scale": [
-                        3.0,
-                        3.0,
-                        1.3
-                    ]
-                }
-            },
-            "pen_2": {
-                "class_module": "omnigibson.objects.dataset_object",
-                "class_name": "DatasetObject",
-                "args": {
-                    "name": "pen_2",
-                    "prim_path": "/World/pen_2",
-                    "category": "pen",
-                    "model": "gzrbrx",
-                    "scale": [
-                        3.0,
-                        3.0,
-                        1.3
-                    ]
-                }
-            },
-            "teapot": {
+
+            "bottle": {
                 "class_module": "omnigibson.objects.dataset_object",
                 "class_name": "DatasetObject",
                 "args": {
                     "name": "bottle",
                     "prim_path": "/World/bottle",
-                    "category": "teapot",
-                    "model": "mvrhya",
+                    "category": "bottle_of_water",
+                    "model": "atvnqy",
                     "scale": [
                         0.7,
                         0.7,

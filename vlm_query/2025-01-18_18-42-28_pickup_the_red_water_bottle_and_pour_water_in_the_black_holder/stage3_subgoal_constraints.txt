@@ -1,0 +1,10 @@
+def stage3_subgoal_constraint1(end_effector, keypoints):
+    """The bottle spout (keypoint 3) needs to be 5cm above the holder opening (keypoint 1)."""
+    offsetted_point = keypoints[1] + np.array([0, 0, 0.05])
+    return np.linalg.norm(keypoints[3] - offsetted_point)
+
+def stage3_subgoal_constraint2(end_effector, keypoints):
+    """The bottle spout (keypoint 3) must be tilted to pour water."""
+    # Assuming a tilt is represented by the spout being lower than the base (keypoint 2).
+    return keypoints[3][2] - keypoints[2][2]
+

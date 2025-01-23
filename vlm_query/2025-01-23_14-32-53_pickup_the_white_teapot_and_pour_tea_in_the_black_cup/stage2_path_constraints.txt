@@ -1,0 +1,9 @@
+def stage2_path_constraint1(end_effector, keypoints):
+    """The robot must still be grasping the teapot handle (keypoint 6)."""
+    return get_grasping_cost_by_keypoint_idx(6)
+
+def stage2_path_constraint2(end_effector, keypoints):
+    """The teapot must stay upright to avoid spilling."""
+    teapot_upright_vector = keypoints[3] - keypoints[6]
+    return np.abs(np.dot(teapot_upright_vector, np.array([0, 0, 1])) - np.linalg.norm(teapot_upright_vector))
+

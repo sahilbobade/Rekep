@@ -12,6 +12,8 @@ from path_solver import PathSolver
 from visualizer import Visualizer
 import transform_utils as T
 from omnigibson.robots.fetch import Fetch
+
+
 from utils import (
     bcolors,
     get_config,
@@ -369,7 +371,7 @@ if __name__ == "__main__":
         'pen': {
             # 'scene_file': './configs/og_scene_file_red_pen.json',
             'scene_file': './configs/og_scene_file_bottle.json',
-            'instruction': 'pickup the red bottle and pour water in the black holder',
+            'instruction': 'pickup the red bottle and pour water in the black cup',
             'rekep_program_dir': './vlm_query/pen',
             'disturbance_seq': {1: stage1_disturbance_seq, 2: stage2_disturbance_seq, 3: stage3_disturbance_seq},
             },

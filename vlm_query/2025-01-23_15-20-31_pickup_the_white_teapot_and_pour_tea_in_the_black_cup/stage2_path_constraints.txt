@@ -1,0 +1,11 @@
+def stage2_path_constraint1(end_effector, keypoints):
+    """The robot must still be grasping the teapot handle (keypoint 10)."""
+    return get_grasping_cost_by_keypoint_idx(10)
+
+def stage2_path_constraint2(end_effector, keypoints):
+    """The teapot must stay upright to avoid spilling."""
+    teapot_upright_vector = keypoints[9] - keypoints[2]
+    z_axis = np.array([0, 0, 1])
+    angle = np.arccos(np.dot(teapot_upright_vector, z_axis) / (np.linalg.norm(teapot_upright_vector) * np.linalg.norm(z_axis)))
+    return angle - np.pi / 18  # Allow a small tilt
+

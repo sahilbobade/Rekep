@@ -1,0 +1,55 @@
+```python
+# The task involves picking up the red bottle and pouring water into the black cup.
+# There are 4 stages involved in this task:
+# 1. Align the end-effector to be horizontal for grasping the bottle.
+# 2. Grasp the red bottle.
+# 3. Align the bottle with the cup opening.
+# 4. Pour water from the bottle into the cup.
+
+num_stages = 4
+
+### stage 1 sub-goal constraints
+def stage1_subgoal_constraint1(end_effector, keypoints):
+    """Ensure the end-effector is horizontal by aligning keypoints 0 and 1."""
+    vector = keypoints[1] - keypoints[0]
+    cost = abs(vector[2])  # Ensure the z-component is 0 for horizontal alignment
+    return cost
+
+### stage 2 sub-goal constraints
+def stage2_subgoal_constraint1(end_effector, keypoints):
+    """Align the end-effector with the red bottle (keypoint 6)."""
+    cost = np.linalg.norm(end_effector - keypoints[6])
+    return cost
+
+### stage 3 sub-goal constraints
+def stage3_subgoal_constraint1(end_effector, keypoints):
+    """Position the bottle (keypoint 6) 10cm above the cup opening (keypoint 8)."""
+    offsetted_point = keypoints[8] + np.array([0, 0, 0.1])
+    cost = np.linalg.norm(keypoints[6] - offsetted_point)
+    return cost
+
+### stage 3 path constraints
+def stage3_path_constraint1(end_effector, keypoints):
+    """The robot must still be grasping the red bottle (keypoint 6)."""
+    return get_grasping_cost_by_keypoint_idx(6)
+
+### stage 4 sub-goal constraints
+def stage4_subgoal_constraint1(end_effector, keypoints):
+    """The bottle (keypoint 6) spout must be tilted to pour water."""
+    vector = keypoints[6] - keypoints[7]  # Assuming keypoint 7 is the spout
+    cost = abs(vector[2]) - 0.1  # Ensure some tilt
+    return cost
+
+### stage 4 path constraints
+def stage4_path_constraint1(end_effector, keypoints):
+    """The robot must still be grasping the red bottle (keypoint 6)."""
+    return get_grasping_cost_by_keypoint_idx(6)
+
+def stage4_path_constraint2(end_effector, keypoints):
+    """The bottle spout (keypoint 7) is directly above the cup opening (keypoint 8)."""
+    cost = np.linalg.norm(keypoints[7][:2] - keypoints[8][:2])
+    return cost
+
+grasp_keypoints = [-1, 6, -1, -1]
+release_keypoints = [-1, -1, -1, 6]
+```

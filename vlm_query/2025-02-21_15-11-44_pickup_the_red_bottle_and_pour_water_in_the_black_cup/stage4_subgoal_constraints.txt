@@ -1,0 +1,7 @@
+def stage4_subgoal_constraint1(end_effector, keypoints):
+    """Tilt the bottle to pour water into the cup."""
+    # Ensure the bottle (keypoint 8) is tilted towards the cup (keypoint 9)
+    vector = keypoints[8] - keypoints[9]
+    cost = abs(vector[2] + 0.05)  # Ensure a slight tilt
+    return cost
+

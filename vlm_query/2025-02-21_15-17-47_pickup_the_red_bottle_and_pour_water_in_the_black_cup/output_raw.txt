@@ -1,0 +1,68 @@
+```python
+# The task involves picking up a red bottle and pouring water into a black cup.
+# This can be broken down into the following stages:
+# 1. Align end-effector
+# 2. Grasp the red bottle
+# 3. Align the bottle with the cup opening
+# 4. Pour water into the cup
+
+num_stages = 4
+
+### stage 1 sub-goal constraints
+def stage1_subgoal_constraint1(end_effector, keypoints):
+    """Ensure the end-effector is horizontal for grasping the bottle."""
+    # Use keypoints 1 and 2 to form a vector and ensure it's horizontal.
+    vector = keypoints[1] - keypoints[2]
+    cost = abs(vector[2])  # Ensure the z-component is 0 for horizontal alignment.
+    return cost
+
+### stage 2 sub-goal constraints
+def stage2_subgoal_constraint1(end_effector, keypoints):
+    """Align the end-effector with the red bottle."""
+    # Align with keypoint 0 (red bottle).
+    offsetted_point = keypoints[0]
+    cost = np.linalg.norm(end_effector - offsetted_point)
+    return cost
+
+### stage 3 sub-goal constraints
+def stage3_subgoal_constraint1(end_effector, keypoints):
+    """Align the bottle with the cup opening."""
+    # Ensure the bottle (keypoint 0) is 10cm above the cup opening (keypoint 6).
+    offsetted_point = keypoints[6] + np.array([0, 0, 0.1])
+    cost = np.linalg.norm(keypoints[0] - offsetted_point)
+    return cost
+
+### stage 3 path constraints
+def stage3_path_constraint1(end_effector, keypoints):
+    """The robot must still be grasping the red bottle."""
+    return get_grasping_cost_by_keypoint_idx(0)
+
+### stage 4 sub-goal constraints
+def stage4_subgoal_constraint1(end_effector, keypoints):
+    """The bottle spout needs to be 5cm above the cup opening."""
+    # Ensure the bottle (keypoint 0) is 5cm above the cup opening (keypoint 6).
+    offsetted_point = keypoints[6] + np.array([0, 0, 0.05])
+    cost = np.linalg.norm(keypoints[0] - offsetted_point)
+    return cost
+
+def stage4_subgoal_constraint2(end_effector, keypoints):
+    """The bottle spout must be tilted to pour water."""
+    # Use keypoints 0 and 3 to form a vector and ensure it's tilted.
+    vector = keypoints[0] - keypoints[3]
+    cost = abs(vector[2] - 0.1)  # Ensure some tilt in the z-component.
+    return cost
+
+### stage 4 path constraints
+def stage4_path_constraint1(end_effector, keypoints):
+    """The robot must still be grasping the red bottle."""
+    return get_grasping_cost_by_keypoint_idx(0)
+
+def stage4_path_constraint2(end_effector, keypoints):
+    """The bottle spout is directly above the cup opening."""
+    # Ensure the x, y alignment of keypoint 0 (bottle) and keypoint 6 (cup).
+    cost = np.linalg.norm(keypoints[0][:2] - keypoints[6][:2])
+    return cost
+
+grasp_keypoints = [-1, 0, -1, -1]
+release_keypoints = [-1, -1, -1, 0]
+```

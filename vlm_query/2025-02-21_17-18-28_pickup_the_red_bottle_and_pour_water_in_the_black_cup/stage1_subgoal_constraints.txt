@@ -1,0 +1,7 @@
+def stage1_subgoal_constraint1(end_effector, keypoints):
+    """Ensure the end-effector is horizontal."""
+    # Use keypoints 0 and 1 to form a vector and ensure it is horizontal.
+    vector = keypoints[1] - keypoints[0]
+    cost = abs(vector[2])  # Ensure the z-component is 0 for horizontal alignment.
+    return cost
+

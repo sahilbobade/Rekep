@@ -1,0 +1,56 @@
+```python
+# The task involves picking up a red bottle and pouring water into a black cup.
+# There are 4 stages involved in this task:
+# 1. Align end-effector
+# 2. Grasp the red bottle
+# 3. Align the bottle with the cup opening
+# 4. Pour water into the cup
+
+num_stages = 4
+
+### stage 1 sub-goal constraints
+def stage1_subgoal_constraint1(end_effector, keypoints):
+    """Ensure the end-effector is horizontal for grasping the bottle."""
+    vector = keypoints[0] - keypoints[1]
+    cost = abs(vector[2])  # Ensure the z-component is 0 for horizontal alignment
+    return cost
+
+### stage 2 sub-goal constraints
+def stage2_subgoal_constraint1(end_effector, keypoints):
+    """Align the end-effector with the red bottle for grasping."""
+    cost = np.linalg.norm(end_effector - keypoints[7])  # Align with the red bottle
+    return cost
+
+### stage 3 sub-goal constraints
+def stage3_subgoal_constraint1(end_effector, keypoints):
+    """Position the bottle above the cup opening."""
+    offsetted_point = keypoints[5] + np.array([0, 0, 0.1])  # 10cm above the cup
+    cost = np.linalg.norm(keypoints[7] - offsetted_point)
+    return cost
+
+### stage 3 path constraints
+def stage3_path_constraint1(end_effector, keypoints):
+    """Ensure the robot is still grasping the red bottle."""
+    return get_grasping_cost_by_keypoint_idx(7)
+
+### stage 4 sub-goal constraints
+def stage4_subgoal_constraint1(end_effector, keypoints):
+    """Tilt the bottle to pour water into the cup."""
+    offsetted_point = keypoints[5] + np.array([0, 0, 0.05])  # 5cm above the cup
+    cost = np.linalg.norm(keypoints[7] - offsetted_point)
+    return cost
+
+### stage 4 path constraints
+def stage4_path_constraint1(end_effector, keypoints):
+    """Ensure the robot is still grasping the red bottle."""
+    return get_grasping_cost_by_keypoint_idx(7)
+
+def stage4_path_constraint2(end_effector, keypoints):
+    """Ensure the bottle spout is directly above the cup opening."""
+    cost = np.linalg.norm(keypoints[10] - keypoints[5])  # Align spout with cup
+    return cost
+
+grasp_keypoints = [-1, 7, -1, -1]
+
+release_keypoints = [-1, -1, -1, 7]
+```

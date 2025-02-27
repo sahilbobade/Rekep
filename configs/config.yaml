@@ -10,6 +10,7 @@ main:
   bounds_max: &bounds_max [0.10, 0.60, 1.2]
   sdf_voxel_size: 0.01
   vlm_camera: 0
+  vlm_camera_2: 2
   camera_2 : 1
   action_steps_per_iter: 5
   seed: *seed
@@ -68,6 +69,12 @@ env:
       name: cam_0
       position: [-0.1655,  0.0167,  1.3664]
       orientation: [ 0.0550,  0.0544,  0.7010,  0.7090]
+      resolution: 480
+    #vlm_camera_2
+    2:
+      name: cam_2
+      position: [0.2, 0.15, 0.92]
+      orientation: [ 0.3212,  0.4682,  0.6788,  0.4656]
       resolution: 480
 
 path_solver:

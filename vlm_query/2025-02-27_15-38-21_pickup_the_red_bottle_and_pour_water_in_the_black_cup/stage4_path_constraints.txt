@@ -1,0 +1,10 @@
+def stage4_path_constraint1(end_effector, keypoints):
+    """Ensure the robot is still grasping the red bottle."""
+    return get_grasping_cost_by_keypoint_idx(8)
+
+def stage4_path_constraint2(end_effector, keypoints):
+    """Ensure the bottle spout is directly above the cup opening."""
+    # Align keypoint 15 with keypoint 13 in x and y directions.
+    cost = np.linalg.norm(keypoints[15][:2] - keypoints[13][:2])
+    return cost
+

@@ -1,0 +1,12 @@
+def stage4_subgoal_constraint1(end_effector, keypoints):
+    """Ensure the bottle cap (keypoint 7) is 5cm above the cup opening (keypoint 9)."""
+    offsetted_point = keypoints[9] + np.array([0, 0, 0.05])  # 5cm above
+    cost = np.linalg.norm(keypoints[7] - offsetted_point)
+    return cost
+
+def stage4_subgoal_constraint2(end_effector, keypoints):
+    """Tilt the bottle to pour water."""
+    vector = keypoints[5] - keypoints[7]  # Vector from bottle base to cap
+    cost = abs(vector[2]) - 0.1  # Ensure some tilt by checking z-component
+    return cost
+

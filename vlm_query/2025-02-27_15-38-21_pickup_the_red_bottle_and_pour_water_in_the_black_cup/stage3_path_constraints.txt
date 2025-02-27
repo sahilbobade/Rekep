@@ -1,0 +1,11 @@
+def stage3_path_constraint1(end_effector, keypoints):
+    """Ensure the robot is still grasping the red bottle."""
+    return get_grasping_cost_by_keypoint_idx(8)
+
+def stage3_path_constraint2(end_effector, keypoints):
+    """Ensure the bottle stays upright to avoid spilling."""
+    # Use keypoints 8 and 15 to form a vector and ensure it's vertical.
+    vector = keypoints[15] - keypoints[8]
+    cost = abs(vector[0]) + abs(vector[1])  # Ensure x and y components are 0 for vertical alignment.
+    return cost
+

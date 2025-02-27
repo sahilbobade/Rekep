@@ -1,0 +1,7 @@
+def stage4_subgoal_constraint1(end_effector, keypoints):
+    """Tilt the bottle to pour water into the cup."""
+    bottle_vector = keypoints[6] - keypoints[5]
+    pour_vector = np.array([0, 0, -1])
+    cost = np.linalg.norm(bottle_vector - pour_vector)
+    return cost
+

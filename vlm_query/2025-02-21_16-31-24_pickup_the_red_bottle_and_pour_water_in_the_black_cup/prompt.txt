@@ -51,7 +51,7 @@ Suppose you are controlling a robot to perform manipulation tasks by writing con
 - the first stage should be to decide if the manipulator end effector should be horizontal or vertical.
 example: in case of picking up water bottle, the end-effector should be horizontal.
 This way the pouring task can be performer better. 
-an example keypoint constraint would be to create a vector using one keypoint on end-effector and other keypoint should always be 'end-effector' point then finally make sure the vector is horizontal. 
+an example keypoint constraint would be to create a vector using two keypoints on end-effector and make sure the vector is horizontal. 
 i.e. the z distance between them is 0 or something else similar to this.
 - Each constraint takes a dummy end-effector point and a set of keypoints as input and returns a numerical cost, where the constraint is satisfied if the cost is smaller than or equal to zero.
 - For each stage, you may write 0 or more sub-goal constraints and 0 or more path constraints.
@@ -104,6 +104,7 @@ def stage1_path_constraint1(end_effector, keypoints):
 Summarize keypoints to be grasped in all grasping stages.
 The length of the list should be equal to the number of stages.
 For grapsing stage, write the keypoint index. For non-grasping stage, write -1.
+Consider the keypoints corressponding to end-effector if first stage as grasped.
 """
 grasp_keypoints = [?, ..., ?]
 
@@ -119,5 +120,5 @@ release_keypoints = [?, ..., ?]
 ```
 
 ## Query
-Query Task: "{instruction}"
+Query Task: "pickup the red bottle and pour water in the black cup"
 Query Image:

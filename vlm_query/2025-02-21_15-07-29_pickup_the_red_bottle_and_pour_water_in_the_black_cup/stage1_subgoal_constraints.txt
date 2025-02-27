@@ -1,0 +1,7 @@
+def stage1_subgoal_constraint1(end_effector, keypoints):
+    """Ensure the end-effector is horizontally aligned for grasping the bottle."""
+    bottle_vector = keypoints[6] - keypoints[5]
+    horizontal_vector = np.array([bottle_vector[0], bottle_vector[1], 0])
+    cost = np.linalg.norm(bottle_vector - horizontal_vector)
+    return cost
+

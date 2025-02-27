@@ -1,0 +1,6 @@
+def stage3_subgoal_constraint1(end_effector, keypoints):
+    """Position the bottle cap 10cm above the cup opening."""
+    offsetted_point = keypoints[9] + np.array([0, 0, 0.1])  # Assuming keypoint 9 is the cup opening
+    cost = np.linalg.norm(keypoints[6] - offsetted_point)
+    return cost
+

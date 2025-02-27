@@ -1,0 +1,57 @@
+```python
+# The task involves picking up the red bottle and pouring water into the black cup.
+# There are 4 stages involved in this task:
+# 1. Align end-effector: Decide the orientation of the arm for grasping the bottle.
+# 2. Grasp red bottle: Align the end-effector with the red bottle.
+# 3. Align bottle with cup: Position the bottle above the cup.
+# 4. Pour water: Tilt the bottle to pour water into the cup.
+
+num_stages = 4
+
+### stage 1 sub-goal constraints
+def stage1_subgoal_constraint1(end_effector, keypoints):
+    """Ensure the end-effector is horizontally aligned for grasping the bottle."""
+    bottle_vector = keypoints[6] - keypoints[5]
+    horizontal_vector = np.array([bottle_vector[0], bottle_vector[1], 0])
+    cost = np.linalg.norm(bottle_vector - horizontal_vector)
+    return cost
+
+### stage 2 sub-goal constraints
+def stage2_subgoal_constraint1(end_effector, keypoints):
+    """Align the end-effector with the red bottle."""
+    cost = np.linalg.norm(end_effector - keypoints[5])
+    return cost
+
+### stage 3 sub-goal constraints
+def stage3_subgoal_constraint1(end_effector, keypoints):
+    """Position the bottle 10cm above the cup opening."""
+    offsetted_point = keypoints[12] + np.array([0, 0, 0.1])
+    cost = np.linalg.norm(keypoints[5] - offsetted_point)
+    return cost
+
+### stage 3 path constraints
+def stage3_path_constraint1(end_effector, keypoints):
+    """The robot must still be grasping the red bottle."""
+    return get_grasping_cost_by_keypoint_idx(5)
+
+### stage 4 sub-goal constraints
+def stage4_subgoal_constraint1(end_effector, keypoints):
+    """Tilt the bottle to pour water into the cup."""
+    bottle_vector = keypoints[6] - keypoints[5]
+    pour_vector = np.array([0, 0, -1])
+    cost = np.linalg.norm(bottle_vector - pour_vector)
+    return cost
+
+### stage 4 path constraints
+def stage4_path_constraint1(end_effector, keypoints):
+    """The robot must still be grasping the red bottle."""
+    return get_grasping_cost_by_keypoint_idx(5)
+
+def stage4_path_constraint2(end_effector, keypoints):
+    """The bottle spout is directly above the cup opening."""
+    cost = np.linalg.norm(keypoints[6] - keypoints[12])
+    return cost
+
+grasp_keypoints = [-1, 5, -1, -1]
+release_keypoints = [-1, -1, -1, 5]
+```

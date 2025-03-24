@@ -1,0 +1,5 @@
+def stage3_subgoal_constraint1(end_effector, keypoints):
+    """The red bottle (keypoint 2) is inside the black holder (keypoint 1)."""
+    offsetted_point = keypoints[1] + np.array([0, 0, -0.1])  # Assuming the holder is 10cm deep
+    return np.linalg.norm(keypoints[2] - offsetted_point)
+

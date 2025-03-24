@@ -1,0 +1,5 @@
+def stage2_subgoal_constraint1(end_effector, keypoints):
+    """Align the red bottle (keypoint 9) with the black holder (keypoint 10)."""
+    offsetted_point = keypoints[10] + np.array([0, 0, 0.1])  # 10cm above the holder
+    return np.linalg.norm(keypoints[9] - offsetted_point)
+

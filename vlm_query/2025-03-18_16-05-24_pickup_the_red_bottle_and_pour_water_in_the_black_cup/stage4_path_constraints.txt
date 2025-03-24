@@ -1,0 +1,10 @@
+def stage4_path_constraint1(end_effector, keypoints):
+    """Ensure the robot is still grasping the red bottle cap (keypoint 5)."""
+    return get_grasping_cost_by_keypoint_idx(5)
+
+def stage4_path_constraint2(end_effector, keypoints):
+    """Ensure the bottle cap (keypoint 5) is directly above the cup opening (keypoint 10)."""
+    vector = keypoints[5] - keypoints[10]
+    cost = np.linalg.norm(vector[:2])  # Ensure x and y components are minimal
+    return cost
+

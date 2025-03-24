@@ -2,16 +2,13 @@
 Suppose you are controlling a robot to perform manipulation tasks by writing constraint functions in Python. The manipulation task is given as an image of the environment, overlayed with keypoints marked with their indices, along with a text instruction. For each given task, please perform the following steps:
 - Determine how many stages are involved in the task. Grasping must be an independent stage. Some examples:
   - "pouring tea from teapot":
-    - 4 stages: "align end-effector", "grasp teapot", "align teapot with cup opening", and "pour liquid"
+    - 4 stages: "grasp teapot", "align teapot with cup opening", "pour liquid" , "put away the teapot safely"
   - "put red block on top of blue block":
-    - 4 stages: "aligne end-effector", "grasp red block", "drop the red block on top of blue block"
+    - 2 stages: "grasp red block", "drop the red block on top of blue block"
   - "reorient bouquet and drop it upright into vase":
-    - 4 stages: "align end-effector", "grasp bouquet", "reorient bouquet", and "keep upright and drop into vase"
+    - 3 stages: "grasp bouquet", "reorient bouquet", and "keep upright and drop into vase"
 - For each stage, write two kinds of constraints, "sub-goal constraints" and "path constraints". The "sub-goal constraints" are constraints that must be satisfied **at the end of the stage**, while the "path constraints" are constraints that must be satisfied **within the stage**. Some examples:
   - "pouring liquid from teapot":
-    - "align end-effector" stage:
-      - 1 sub-goal constraints: "based on task decide the orientation of arm i.e. it should be vertical, horizontal or at some angle"
-      - 0 path constraints
     - "grasp teapot" stage:
       - 1 sub-goal constraints: "align the end-effector with the teapot handle"
       - 0 path constraints
@@ -21,10 +18,10 @@ Suppose you are controlling a robot to perform manipulation tasks by writing con
     - "pour liquid" stage:
       - 2 sub-goal constraints: "the teapot spout needs to be 5cm above the cup opening", "the teapot spout must be tilted to pour liquid"
       - 2 path constraints: "the robot must still be grasping the teapot handle", "the teapot spout is directly above the cup opening"
+    - "put away the cup safely":
+      - 1 sub-goal constraint: "the teapot should be safe distance above the ground"
+      - 0 path constrainta
   - "put red block on top of blue block":
-    - "align end-effector" stage:
-      - 1 sub-goal constraints: "based on task decide the orientation of arm i.e. it should be vertical, horizontal or at some angle"
-      - 0 path constraints
     - "grasp red block" stage:
       - 1 sub-goal constraints: "align the end-effector with the red block"
       - 0 path constraints
@@ -32,9 +29,6 @@ Suppose you are controlling a robot to perform manipulation tasks by writing con
       - 1 sub-goal constraints: "the red block is 10cm on top of the blue block"
       - 1 path constraints: "the robot must still be grasping the red block"
   - "reorient bouquet and drop it upright into vase":
-    - "align end-effector" stage:
-      - 1 sub-goal constraints: "based on task decide the orientation of arm i.e. it should be vertical, horizontal or at some angle"
-      - 0 path constraints
     - "grasp bouquet" stage:
       - 1 sub-goal constraints: "align the end-effector with the bouquet stem"
       - 0 path constraints
@@ -48,11 +42,6 @@ Suppose you are controlling a robot to perform manipulation tasks by writing con
 - Summarize at the end of which stage the robot should release the keypoints by defining the `release_keypoints` variable.
 
 **Note:**
-- the first stage should be to decide if the manipulator end effector should be horizontal or vertical.
-example: in case of picking up water bottle, the end-effector should be horizontal.
-This way the pouring task can be performer better. 
-an example keypoint constraint would be to create a vector using one keypoint on end-effector and other keypoint should always be 'end-effector' point then finally make sure the vector is horizontal. 
-i.e. the z distance between them is 0 or something else similar to this.
 - Each constraint takes a dummy end-effector point and a set of keypoints as input and returns a numerical cost, where the constraint is satisfied if the cost is smaller than or equal to zero.
 - For each stage, you may write 0 or more sub-goal constraints and 0 or more path constraints.
 - Avoid using "if" statements in your constraints.
@@ -116,6 +105,13 @@ If a keypoint is to be released at the end of a stage, write the keypoint index 
 """
 release_keypoints = [?, ..., ?]
 
+"""
+Give desired direction of end-effector while grasping the object.
+The direction should be dependant on task. e.g. if picking up up a cup or bottle for pouring then the desired direction should be horizontal.
+Along the x-axis (left/right): np.array([1, 0, 0]) or np.array([-1, 0, 0])
+Along the y-axis (forward/backward): np.array([0, 1, 0]) or np.array([0, -1, 0])
+"""
+desired_direction = np.array("fill this")
 ```
 
 ## Query

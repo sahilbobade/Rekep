@@ -1,0 +1,56 @@
+```python
+# The task involves picking up the red bottle and pouring water into the black cup.
+# This can be broken down into three stages:
+# 1. Grasp the red bottle.
+# 2. Align the bottle with the cup opening.
+# 3. Pour water into the cup.
+
+num_stages = 3
+
+### stage 1 sub-goal constraints
+def stage1_subgoal_constraint1(end_effector, keypoints):
+    """Align the end-effector with the red bottle (keypoint 5)."""
+    return np.linalg.norm(end_effector - keypoints[5])
+
+### stage 1 path constraints
+# No path constraints needed for grasping.
+
+### stage 2 sub-goal constraints
+def stage2_subgoal_constraint1(end_effector, keypoints):
+    """The bottle (keypoint 5) needs to be 10cm above the cup opening (keypoint 3)."""
+    offsetted_point = keypoints[3] + np.array([0, 0, 0.1])
+    return np.linalg.norm(keypoints[5] - offsetted_point)
+
+### stage 2 path constraints
+def stage2_path_constraint1(end_effector, keypoints):
+    """The robot must still be grasping the bottle (keypoint 5)."""
+    return get_grasping_cost_by_keypoint_idx(5)
+
+### stage 3 sub-goal constraints
+def stage3_subgoal_constraint1(end_effector, keypoints):
+    """The bottle spout (keypoint 6) needs to be 5cm above the cup opening (keypoint 3)."""
+    offsetted_point = keypoints[3] + np.array([0, 0, 0.05])
+    return np.linalg.norm(keypoints[6] - offsetted_point)
+
+def stage3_subgoal_constraint2(end_effector, keypoints):
+    """The bottle spout (keypoint 6) must be tilted to pour water."""
+    # Assuming a tilt is required, we can check the angle with the vertical axis.
+    bottle_vector = keypoints[6] - keypoints[5]
+    vertical_vector = np.array([0, 0, 1])
+    angle = np.arccos(np.dot(bottle_vector, vertical_vector) / (np.linalg.norm(bottle_vector) * np.linalg.norm(vertical_vector)))
+    return angle - np.pi / 4  # Example tilt angle
+
+### stage 3 path constraints
+def stage3_path_constraint1(end_effector, keypoints):
+    """The robot must still be grasping the bottle (keypoint 5)."""
+    return get_grasping_cost_by_keypoint_idx(5)
+
+def stage3_path_constraint2(end_effector, keypoints):
+    """The bottle spout (keypoint 6) is directly above the cup opening (keypoint 3)."""
+    return np.linalg.norm(keypoints[6][:2] - keypoints[3][:2])
+
+grasp_keypoints = [5, -1, -1]
+release_keypoints = [-1, -1, 5]
+
+desired_direction = np.array([0, 1, 0])  # Forward/backward direction for pouring
+```

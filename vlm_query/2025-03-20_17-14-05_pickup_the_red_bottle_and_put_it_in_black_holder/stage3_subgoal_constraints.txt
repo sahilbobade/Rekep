@@ -1,0 +1,4 @@
+def stage3_subgoal_constraint1(end_effector, keypoints):
+    """The red bottle (keypoint 4) is inside the black holder (below the top edge, keypoint 2)."""
+    return keypoints[4][2] - keypoints[2][2]
+

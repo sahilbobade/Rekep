@@ -1,0 +1,58 @@
+```python
+# The task involves picking up a red bottle and placing it in a black holder.
+# There are 4 stages involved in this task:
+# 1. Align the end-effector.
+# 2. Grasp the red bottle.
+# 3. Align the red bottle with the black holder.
+# 4. Place the red bottle into the black holder.
+
+num_stages = 4
+
+### stage 1 sub-goal constraints
+def stage1_subgoal_constraint1(end_effector, keypoints):
+    """Ensure the end-effector is horizontal to grasp the bottle effectively."""
+    vector = keypoints[0] - end_effector
+    cost = abs(vector[2])  # Ensure the z-component is 0 for horizontal alignment
+    return cost
+
+### stage 1 path constraints
+# No path constraints needed for this stage
+
+### stage 2 sub-goal constraints
+def stage2_subgoal_constraint1(end_effector, keypoints):
+    """Align the end-effector with the red bottle (keypoint 3)."""
+    offsetted_point = keypoints[3]
+    cost = np.linalg.norm(end_effector - offsetted_point)
+    return cost
+
+### stage 2 path constraints
+# No path constraints needed for this stage
+
+### stage 3 sub-goal constraints
+def stage3_subgoal_constraint1(end_effector, keypoints):
+    """Align the red bottle (keypoint 3) with the black holder (keypoint 1)."""
+    offsetted_point = keypoints[1]
+    cost = np.linalg.norm(keypoints[3] - offsetted_point)
+    return cost
+
+### stage 3 path constraints
+def stage3_path_constraint1(end_effector, keypoints):
+    """Ensure the robot is still grasping the red bottle (keypoint 3)."""
+    return get_grasping_cost_by_keypoint_idx(3)
+
+### stage 4 sub-goal constraints
+def stage4_subgoal_constraint1(end_effector, keypoints):
+    """Place the red bottle (keypoint 3) into the black holder (keypoint 1)."""
+    offsetted_point = keypoints[1] + np.array([0, 0, -0.1])  # Slightly below the holder's top
+    cost = np.linalg.norm(keypoints[3] - offsetted_point)
+    return cost
+
+### stage 4 path constraints
+def stage4_path_constraint1(end_effector, keypoints):
+    """Ensure the robot is still grasping the red bottle (keypoint 3)."""
+    return get_grasping_cost_by_keypoint_idx(3)
+
+grasp_keypoints = [-1, 3, -1, -1]
+end_effector_keypoints = [0]
+release_keypoints = [-1, -1, -1, 3]
+```

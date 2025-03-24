@@ -1,0 +1,4 @@
+def stage2_subgoal_constraint1(end_effector, keypoints):
+    """Align the red bottle (keypoint 5) with the black holder opening (keypoint 4)."""
+    return np.linalg.norm(keypoints[5] - keypoints[4])
+

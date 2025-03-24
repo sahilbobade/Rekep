@@ -1,0 +1,5 @@
+def stage2_subgoal_constraint1(end_effector, keypoints):
+    """The red bottle (keypoint 10) is inside the black holder (keypoints 5, 6, 7)."""
+    holder_center = np.mean(keypoints[[5, 6, 7]], axis=0)
+    return np.linalg.norm(keypoints[10] - holder_center)
+

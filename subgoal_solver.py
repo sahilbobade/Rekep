@@ -68,12 +68,13 @@ def objective(opt_vars,
     cost += reset_reg_cost
 
     # grasp metric (better performance if using anygrasp or force-based grasp metrics)
-    # if is_grasp_stage:
-    #     preferred_dir = np.array([0, 0, -1]) 
-    #     grasp_cost = -np.dot(opt_pose_homo[:3, 0], preferred_dir) + 1  # [0, 1]
-    #     grasp_cost = 10.0 * grasp_cost
-    #     debug_dict['grasp_cost'] = grasp_cost
-    #     cost += grasp_cost
+    if is_grasp_stage:
+        # preferred_dir = np.array([0, 0, -1]) 
+        preferred_dir = np.array([0, 1, 0]) 
+        grasp_cost = -np.dot(opt_pose_homo[:3, 0], preferred_dir) + 1  # [0, 1]
+        grasp_cost = 10.0 * grasp_cost
+        debug_dict['grasp_cost'] = grasp_cost
+        cost += grasp_cost
 
     # goal constraint violation cost
     debug_dict['subgoal_constraint_cost'] = None

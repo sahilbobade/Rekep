@@ -1,0 +1,62 @@
+```python
+# The task involves picking up a red bottle and pouring water into a black cup.
+# This task can be broken down into 4 stages:
+# 1. Align the end-effector to be horizontal for grasping the bottle.
+# 2. Grasp the red bottle.
+# 3. Align the bottle with the black cup.
+# 4. Pour water into the black cup.
+
+num_stages = 4
+
+### stage 1 sub-goal constraints
+def stage1_subgoal_constraint1(end_effector, keypoints):
+    """Ensure the end-effector is horizontal for grasping the bottle."""
+    # Use keypoints 0 and 4 to form a vector and ensure it's horizontal.
+    vector = keypoints[4] - keypoints[0]
+    cost = abs(vector[2])  # Ensure the z-component is 0 for horizontal alignment.
+    return cost
+
+### stage 2 sub-goal constraints
+def stage2_subgoal_constraint1(end_effector, keypoints):
+    """Align the end-effector with the red bottle for grasping."""
+    # Align with keypoint 12 on the red bottle.
+    offsetted_point = keypoints[12]
+    cost = np.linalg.norm(end_effector - offsetted_point)
+    return cost
+
+### stage 3 sub-goal constraints
+def stage3_subgoal_constraint1(end_effector, keypoints):
+    """Align the bottle with the black cup."""
+    # Ensure the bottle (keypoint 12) is above the cup (keypoint 9).
+    offsetted_point = keypoints[9] + np.array([0, 0, 0.1])  # 10cm above the cup
+    cost = np.linalg.norm(keypoints[12] - offsetted_point)
+    return cost
+
+### stage 3 path constraints
+def stage3_path_constraint1(end_effector, keypoints):
+    """Ensure the robot is still grasping the red bottle."""
+    return get_grasping_cost_by_keypoint_idx(12)
+
+### stage 4 sub-goal constraints
+def stage4_subgoal_constraint1(end_effector, keypoints):
+    """Tilt the bottle to pour water into the black cup."""
+    # Ensure the bottle (keypoint 12) is tilted above the cup (keypoint 9).
+    offsetted_point = keypoints[9] + np.array([0, 0, 0.05])  # 5cm above the cup
+    cost = np.linalg.norm(keypoints[12] - offsetted_point)
+    return cost
+
+### stage 4 path constraints
+def stage4_path_constraint1(end_effector, keypoints):
+    """Ensure the robot is still grasping the red bottle."""
+    return get_grasping_cost_by_keypoint_idx(12)
+
+def stage4_path_constraint2(end_effector, keypoints):
+    """Ensure the bottle is directly above the cup opening."""
+    # Align keypoint 12 with keypoint 9 in the xy-plane.
+    cost = np.linalg.norm(keypoints[12][:2] - keypoints[9][:2])
+    return cost
+
+grasp_keypoints = [-1, 12, -1, -1]
+end_effector_keypoints = [0, 4]
+release_keypoints = [-1, -1, -1, 12]
+```

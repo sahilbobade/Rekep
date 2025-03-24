@@ -1,0 +1,44 @@
+```python
+# The task involves picking up a red bottle and placing it in a black holder.
+# There are 3 stages involved in this task:
+# 1. Grasp the red bottle.
+# 2. Align the red bottle with the black holder.
+# 3. Place the red bottle into the black holder.
+
+num_stages = 3
+
+### stage 1 sub-goal constraints
+def stage1_subgoal_constraint1(end_effector, keypoints):
+    """Align the end-effector with the red bottle (keypoint 4)."""
+    return np.linalg.norm(end_effector - keypoints[4])
+
+### stage 1 path constraints
+# No path constraints needed for grasping.
+
+### stage 2 sub-goal constraints
+def stage2_subgoal_constraint1(end_effector, keypoints):
+    """Align the red bottle (keypoint 4) with the center of the black holder (average of keypoints 3, 5, 8, 9)."""
+    holder_center = np.mean([keypoints[3], keypoints[5], keypoints[8], keypoints[9]], axis=0)
+    return np.linalg.norm(keypoints[4] - holder_center)
+
+### stage 2 path constraints
+def stage2_path_constraint1(end_effector, keypoints):
+    """The robot must still be grasping the red bottle (keypoint 4)."""
+    return get_grasping_cost_by_keypoint_idx(4)
+
+### stage 3 sub-goal constraints
+def stage3_subgoal_constraint1(end_effector, keypoints):
+    """The red bottle (keypoint 4) is inside the black holder (keypoint 5 is 10cm above keypoint 4)."""
+    offsetted_point = keypoints[5] + np.array([0, 0, 0.1])
+    return np.linalg.norm(keypoints[4] - offsetted_point)
+
+### stage 3 path constraints
+def stage3_path_constraint1(end_effector, keypoints):
+    """The robot must still be grasping the red bottle (keypoint 4)."""
+    return get_grasping_cost_by_keypoint_idx(4)
+
+grasp_keypoints = [4, -1, -1]
+release_keypoints = [-1, -1, 4]
+
+desired_direction = np.array([0, 1, 0])
+```

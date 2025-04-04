@@ -1,0 +1,6 @@
+def stage3_subgoal_constraint1(end_effector, keypoints):
+    """The bottle (keypoint 4) must be tilted to pour liquid."""
+    # Assuming the bottle is tilted when the z-axis of the bottle is not parallel to the global z-axis
+    bottle_vector = keypoints[4] - keypoints[8]
+    return np.abs(np.dot(bottle_vector, np.array([0, 0, 1])))
+

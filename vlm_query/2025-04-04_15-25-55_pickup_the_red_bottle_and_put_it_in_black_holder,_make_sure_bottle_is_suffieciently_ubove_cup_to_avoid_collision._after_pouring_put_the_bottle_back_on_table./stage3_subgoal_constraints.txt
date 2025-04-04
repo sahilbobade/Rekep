@@ -1,0 +1,4 @@
+def stage3_subgoal_constraint1(end_effector, keypoints):
+    """The bottle (keypoint 8) must be tilted to pour."""
+    return np.abs(keypoints[8][2] - keypoints[10][2] - 0.05)
+

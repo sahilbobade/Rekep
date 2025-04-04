@@ -1,0 +1,5 @@
+def stage4_subgoal_constraint1(end_effector, keypoints):
+    """The bottle (keypoint 8) needs to be 10cm above the table (keypoint 0)."""
+    offsetted_point = keypoints[0] + np.array([0, 0, 0.1])
+    return np.linalg.norm(keypoints[8] - offsetted_point)
+
